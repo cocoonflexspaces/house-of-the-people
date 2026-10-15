@@ -42,7 +42,7 @@ a:hover{text-decoration-color:var(--ink)}
 nav.jump{position:sticky;top:0;z-index:5;background:rgba(238,240,232,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 nav.jump ul{list-style:none;margin:0 auto;padding:10px 16px;display:flex;gap:6px;overflow-x:auto;max-width:760px;scrollbar-width:none}
 nav.jump ul::-webkit-scrollbar{display:none}
-nav.jump a{display:block;white-space:nowrap;padding:7px 13px;border-radius:999px;font-size:14px;text-decoration:none;color:var(--ink)}
+nav.jump a{display:block;white-space:nowrap;padding:11px 14px;border-radius:999px;font-size:14px;text-decoration:none;color:var(--ink)}
 nav.jump a:hover{background:#DDE4D8}
 
 /* ---------- content ---------- */
@@ -88,11 +88,42 @@ ul.places li.fav .name::after{content:"Edu's favorite";margin-left:10px;font:500
 .plant .care{font-size:14px;color:#3E5547;margin:0}
 .plant.pending .ph{aspect-ratio:1;border-radius:10px;border:1.5px dashed var(--sage);display:grid;place-items:center;color:var(--sage);font-size:14px;text-align:center;padding:12px}
 
-footer{background:var(--night);color:#C9D1C4;padding:48px 20px 64px;text-align:left}
+footer{background:var(--night);color:#C9D1C4;padding:48px 20px calc(64px + env(safe-area-inset-bottom));text-align:left}
 footer .in{max-width:760px;margin:0 auto}
 footer p{font:400 24px/1.35 var(--serif);color:var(--silk);max-width:30ch}
 footer a{color:var(--chitin)}
 
+
+
+/* grow the house */
+form.grow{margin-top:22px;background:#E2E9DF;border-radius:16px;padding:20px}
+form.grow fieldset{border:0;margin:0 0 16px;padding:0}
+form.grow legend{font-weight:600;font-size:15px;margin-bottom:10px;padding:0}
+.kinds{display:flex;flex-wrap:wrap;gap:8px}
+.kinds input{position:absolute;opacity:0;pointer-events:none}
+.kinds span{display:block;padding:9px 14px;border-radius:999px;border:1px solid #B9C7B6;font-size:15px;background:var(--silk);cursor:pointer}
+.kinds input:checked+span{background:var(--night);color:var(--silk);border-color:var(--night)}
+.kinds input:focus-visible+span{outline:3px solid var(--chitin);outline-offset:2px}
+.field{display:block;margin-bottom:14px}
+.field>span{display:block;font-weight:600;font-size:15px;margin-bottom:6px}
+.field em{font-weight:400;font-style:normal;color:var(--sage)}
+.field textarea,.field input{width:100%;font:400 16px/1.45 var(--sans);color:var(--ink);background:var(--silk);border:1px solid #B9C7B6;border-radius:10px;padding:11px 12px}
+form.grow button{width:100%;font:600 16px/1 var(--sans);padding:15px;border:0;border-radius:999px;background:var(--night);color:var(--silk);cursor:pointer;min-height:48px}
+form.grow button:hover{background:#1C3329}
+form.grow .hint{font-size:14px;color:var(--sage);margin:10px 0 0;text-align:center}
+
+
+/* locked codes */
+.vault{background:var(--night);color:var(--silk);border-radius:16px;padding:20px;margin:22px 0}
+.vault label{display:block;font:400 26px/1.15 var(--serif);margin-bottom:6px}
+.vault .hint{font-size:15px;color:#AFC0B4;margin:0 0 14px}
+.vault .row{display:flex;gap:8px}
+.vault input{flex:1;min-width:0;font:400 16px/1 var(--sans);padding:13px 14px;border-radius:999px;border:1px solid #3A5247;background:#13261E;color:var(--silk)}
+.vault button{font:600 16px/1 var(--sans);padding:0 20px;min-height:46px;border:0;border-radius:999px;background:var(--chitin);color:var(--night);cursor:pointer}
+.vault .err{color:#F2A58F;font-size:15px;margin:12px 0 0}
+.vault dl.facts{border-top-color:#2C4238}
+.vault dl.facts div{border-bottom-color:#2C4238}
+.vault dl.facts b{font-size:20px;letter-spacing:.04em;color:var(--chitin)}
 
 /* scroll cue: a single thread of light pointing down */
 .cue{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);width:44px;height:72px;display:grid;place-items:center;color:var(--chitin);border-radius:22px}
@@ -142,6 +173,7 @@ dialog.lightbox button{position:fixed;top:14px;right:14px;width:44px;height:44px
     <li><a href="#around">Getting around</a></li>
     <li><a href="#eat">Food & drinks</a></li>
     <li><a href="#explore">Explore</a></li>
+    <li><a href="#grow">Grow the house</a></li>
   </ul>
 </nav>
 
@@ -166,7 +198,15 @@ dialog.lightbox button{position:fixed;top:14px;right:14px;width:44px;height:44px
     <video src="lockbox.mp4" poster="lockbox-poster.jpg" controls playsinline preload="metadata"></video>
     <figcaption>Where the lockbox is, on the stair railing by the door of 3A.</figcaption>
   </figure>
-  <div class="note">The door code, lockbox code and wifi password are in my WhatsApp message to you.</div>
+  <div class="vault" id="vault">
+    <form id="vaultForm">
+      <label for="vaultPw">Door code, lockbox code and wifi password</label>
+      <p class="hint">Enter the password I sent you on WhatsApp to see them.</p>
+      <div class="row"><input id="vaultPw" type="password" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Password"><button type="submit">Unlock</button></div>
+      <p class="err" role="alert" hidden>That password didn't work. Check my WhatsApp message and try again.</p>
+    </form>
+    <div class="open" hidden></div>
+  </div>
   <dl class="facts">
     <div><dt>Edu</dt><dd><a href="https://wa.me/19172147307">+1 917 214 7307</a> on WhatsApp. I keep New York hours even while abroad.</dd></div>
     <div><dt>Neighbors</dt><dd>You'll be added to the building chat. Say hi — the people here are wonderful friends.</dd></div>
@@ -314,6 +354,32 @@ dialog.lightbox button{position:fixed;top:14px;right:14px;width:44px;height:44px
     <li><span class="name">Good Room</span> <span class="where">Greenpoint</span><span class="why">Two rooms, house to techno, great sound.</span></li>
     <li><span class="name">The Lot Radio</span> <span class="where">Williamsburg</span><span class="why">24/7 DJ radio from a shipping container.</span></li>
   </ul>
+</section>
+
+<section id="grow">
+  <h2>Grow the house</h2>
+  <p>The House of the People grows with the people who stay in it. Leave something for it: an idea, a song, a playlist, a design, or something the space is missing.</p>
+  <form class="grow" id="growForm">
+    <fieldset>
+      <legend>What are you sharing?</legend>
+      <div class="kinds">
+        <label><input type="radio" name="kind" value="An idea" checked><span>An idea</span></label>
+        <label><input type="radio" name="kind" value="A song"><span>A song</span></label>
+        <label><input type="radio" name="kind" value="A playlist"><span>A playlist</span></label>
+        <label><input type="radio" name="kind" value="A design"><span>A design</span></label>
+        <label><input type="radio" name="kind" value="Something for the space"><span>Something for the space</span></label>
+        <label><input type="radio" name="kind" value="Something else"><span>Something else</span></label>
+      </div>
+    </fieldset>
+    <label class="field"><span>Tell me about it</span>
+      <textarea name="note" rows="4" required placeholder="What it is and why it belongs here"></textarea>
+    </label>
+    <label class="field"><span>Link <em>(optional)</em></span>
+      <input name="link" type="url" inputmode="url" placeholder="Spotify, SoundCloud, a reference image…">
+    </label>
+    <button type="submit">Send to Edu on WhatsApp</button>
+    <p class="hint">Opens WhatsApp with your message ready to send.</p>
+  </form>
 </section>
 
 </main>
@@ -466,6 +532,35 @@ dialog.lightbox button{position:fixed;top:14px;right:14px;width:44px;height:44px
     el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open(el.src,el.alt)}});
   });
   d.addEventListener('click',()=>d.close());
+})();
+</script>
+<script>
+document.getElementById('growForm').addEventListener('submit',e=>{
+  e.preventDefault();const f=e.target;
+  const kind=f.kind.value, note=f.note.value.trim(), link=f.link.value.trim();
+  const msg=`Hi Edu! For The House of the People — ${kind.toLowerCase()}:\n\n${note}${link?`\n\n${link}`:''}`;
+  window.open('https://wa.me/19172147307?text='+encodeURIComponent(msg),'_blank','noopener');
+});
+</script>
+<script>
+/* The codes are encrypted (AES-GCM, key from the password via PBKDF2). They only exist in readable form after the right password is entered. */
+(function(){
+  const B={"s": "GJdzUBnekx7xocEvgHtwUw==", "i": "lXTQB1so4b31NodN", "c": "U21lXxfvfR0stgAH7Z5FNnx8hSo77g89JmiH80lRk6PqaqtsdSBM7UFA0idyq+X87Z+XKQhwIiE9LG3fc1oqR3RgpnPXX1s7FYS729X4Sqzj6uXwTtSjiWr86ZeKznqys4wNeqTBSSh/fQlahUWvjE1te41oVNg4TFUwa0qY7a4eLCcJRU/8A9x+TtO+HMFS87WqlYzs5sR1uuLV8pwwfFejF01IHRIcPown6FSHe+K/f48rM39K3G2aanqLG/Sbi/o1hw+lgsMo9EkkvjdpaQhGCE5gTYg3McaYK3BKVMSIUZoN/czzbzGnAeMuJ7oPggSe03Fco38xgRA5FYq9AyC6MgqM3UyPbzwEQQV6/yEsb4i5OpQ6ATL9QKe27wXs94rp1Rx/Zc8ypTpfl77rbL+1mbn0zrmEMY6UWG/5uIOr/g=="}, IT=250000;
+  const f=document.getElementById('vaultForm'), out=document.querySelector('#vault .open'), err=f.querySelector('.err');
+  const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+  async function unlock(pw){
+    const base=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);
+    const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(B.s),iterations:IT,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+    return new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(B.i)},key,b64(B.c)));
+  }
+  function show(html){out.innerHTML=html;out.hidden=false;f.hidden=true}
+  f.addEventListener('submit',async e=>{
+    e.preventDefault();err.hidden=true;
+    const pw=f.querySelector('input').value.trim();
+    try{const html=await unlock(pw);show(html);try{sessionStorage.setItem('hotp',pw)}catch(_){}}
+    catch(_){err.hidden=false}
+  });
+  try{const pw=sessionStorage.getItem('hotp');if(pw)unlock(pw).then(show).catch(()=>{})}catch(_){}
 })();
 </script>
 </body>
